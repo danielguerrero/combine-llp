@@ -2,19 +2,19 @@ import re, optparse
 import os.path,sys
 import argparse
 from math import *
-from ROOT import *
+# from ROOT import *
 import ROOT
 from array import array
 ROOT.gROOT.SetBatch(True)
 
 def seq(start, stop, step=1):
-    n = int(round((stop - start)/float(step)))
-    if n > 1:
-        return([start + step*i for i in range(n+1)])
-    elif n == 1:
-        return([start])
-    else:
-        return([])
+	n = int(round((stop - start)/float(step)))
+	if n > 1:
+		return([start + step*i for i in range(n+1)])
+	elif n == 1:
+		return([start])
+	else:
+		return([])
 
 #####
 def redrawBorder(mass):
@@ -32,7 +32,7 @@ def redrawBorder(mass):
       l.DrawLine(0.002, 0.00001, 10, 0.00001);
       l.DrawLine(0.002, 10, 10, 10);
       l.DrawLine(0.002, 0.00001, 0.002, 10);
-      l.DrawLine(10, 0.00001, 10, 10);      
+      l.DrawLine(10, 0.00001, 10, 10);   	
 
 
    #l.DrawLine(ROOT.gPad.GetUxmax(), 0.00001, ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymax());
@@ -40,18 +40,18 @@ def redrawBorder(mass):
    #l.DrawLine(ROOT.gPad.GetUxmin(), 0.00001, ROOT.gPad.GetUxmax(), 0.00001);
 
 def getVals(fname):
-    fIn = ROOT.TFile.Open(fname)
-    tIn = fIn.Get('limit')
-    if tIn.GetEntries() != 6:
-        print "*** WARNING: cannot parse file", fname, "because nentries != 6"
-        raise RuntimeError('cannot parse file')
-    vals = []
-    for i in range(0, tIn.GetEntries()):
-        tIn.GetEntry(i)
-        qe = tIn.quantileExpected
-        lim = tIn.limit
-        vals.append((qe,lim))
-    return vals
+	fIn = ROOT.TFile.Open(fname)
+	tIn = fIn.Get('limit')
+	if tIn.GetEntries() != 6:
+		print "*** WARNING: cannot parse file", fname, "because nentries != 6"
+		raise RuntimeError('cannot parse file')
+	vals = []
+	for i in range(0, tIn.GetEntries()):
+		tIn.GetEntry(i)
+		qe = tIn.quantileExpected
+		lim = tIn.limit
+		vals.append((qe,lim))
+	return vals
 
 ################################################################################################
 ###########OPTIONS
@@ -104,13 +104,14 @@ if order == 'NLO':
   xsections = [1.050e-01, 2.288e-02, 7.154e-03, 2.700e-03, 1.163e-03, 5.446e-04,2.711e-04,1.410e-04,7.604e-05]
 
 if mllp=='2':
-    ctaus     = [2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,150,200,250,300,800,1000,2000,3000,8000,10000]
+#	ctaus     = [2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,90,95,100,150,200,250,300,800,1000,2000,3000,8000,10000]
+	ctaus     = [2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,150,200,250,300,800,1000,2000,3000,8000,10000]
 if mllp=='10':
     ctaus      = [10, 20, 30, 80, 100, 200, 300, 800, 1000, 2000, 3000, 8000, 10000]
 
 for k in range(0, len(masses)):
    if masses[k]==int(mvll): xsecth=xsections[k] 
-    
+	
 #Get XS predicted for vll vs mass
 n  = 2
 x  = array('d', [0.01,10])
@@ -123,123 +124,123 @@ ptsList = []
 
 #fill out the arrays for limits
 for k in range(0, len(ctaus) ):
-    fname = "datacards_%s/cards_%s_%s/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
-    if unblind==True: fname = "datacards_unblinded_%s/cards_%s_%s/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
-    vals  = getVals(fname)
-    xs    = xsecth
-    obs   = 0.0 ## FIXME
-    if unblind==True: obs= vals[5][1]*xs
-    m2s_t = vals[0][1]*xs
-    m1s_t = vals[1][1]*xs
-    exp   = vals[2][1]*xs
-    p1s_t = vals[3][1]*xs
-    p2s_t = vals[4][1]*xs
-    ## because the other code wants +/ sigma vars as deviations, without sign, from the centeal exp value...
-    p2s  = p2s_t - exp
-    p1s  = p1s_t - exp
-    m2s  = exp - m2s_t
-    m1s  = exp - m1s_t
-    xval = float(ctaus[k])/float(1000)
-    ptsList.append((xval, obs, exp, p2s, p1s, m1s, m2s))
+	fname = "datacards_%s/cards_%s_%s/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
+	if unblind==True: fname = "datacards_unblinded_%s/cards_%s_%s/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
+	vals  = getVals(fname)
+	xs    = xsecth
+	obs   = 0.0 ## FIXME
+	if unblind==True: obs= vals[5][1]*xs
+	m2s_t = vals[0][1]*xs
+	m1s_t = vals[1][1]*xs
+	exp   = vals[2][1]*xs
+	p1s_t = vals[3][1]*xs
+	p2s_t = vals[4][1]*xs
+	## because the other code wants +/ sigma vars as deviations, without sign, from the centeal exp value...
+	p2s  = p2s_t - exp
+	p1s  = p1s_t - exp
+	m2s  = exp - m2s_t
+	m1s  = exp - m1s_t
+	xval = float(ctaus[k])/float(1000)
+	ptsList.append((xval, obs, exp, p2s, p1s, m1s, m2s))
 ptsList.sort()
 for ipt, pt in enumerate(ptsList):
-    xval = pt[0]
-    obs  = pt[1]
-    exp  = pt[2]
-    p2s  = pt[3]
-    p1s  = pt[4]
-    m1s  = pt[5]
-    m2s  = pt[6]
-    grexp.SetPoint(ipt, xval, exp)
-    grobs.SetPoint(ipt, xval, obs)
-    gr1sigma.SetPoint(ipt, xval, exp)
-    gr2sigma.SetPoint(ipt, xval, exp)
-    gr1sigma.SetPointError(ipt, 0,0,m1s,p1s)
-    gr2sigma.SetPointError(ipt, 0,0,m2s,p2s)
+	xval = pt[0]
+	obs  = pt[1]
+	exp  = pt[2]
+	p2s  = pt[3]
+	p1s  = pt[4]
+	m1s  = pt[5]
+	m2s  = pt[6]
+	grexp.SetPoint(ipt, xval, exp)
+	grobs.SetPoint(ipt, xval, obs)
+	gr1sigma.SetPoint(ipt, xval, exp)
+	gr2sigma.SetPoint(ipt, xval, exp)
+	gr1sigma.SetPointError(ipt, 0,0,m1s,p1s)
+	gr2sigma.SetPointError(ipt, 0,0,m2s,p2s)
 
 if categ==True:
-    ptsList_csc = []
-    ptsList_dt  = []
-    #CSC fill
-    for j in range(0, len(ctaus) ):
-        fname = "datacards_%s/cards_%s_%s/VLLModel_CSCB/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[j],mvll,ctaus[j])
-        if unblind==True: fname = "datacards_unblinded_%s/cards_%s_%s/VLLModel_CSCU/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[j],mvll,ctaus[j])
-        vals  = getVals(fname)
-        xs    = xsecth
-        obs   = 0.0 ## FIXME
-        if unblind==True: obs = vals[5][1]*xs
-        m2s_t = vals[0][1]*xs
-        m1s_t = vals[1][1]*xs
-        exp   = vals[2][1]*xs
-        p1s_t = vals[3][1]*xs
-        p2s_t = vals[4][1]*xs
-        ## because the other code wants +/ sigma vars as deviations, without sign, from the centeal exp value...
-        p2s  = p2s_t - exp
-        p1s  = p1s_t - exp
-        m2s  = exp - m2s_t
-        m1s  = exp - m1s_t
-        xval = float(ctaus[j])/float(1000)
-        ptsList_csc.append((xval, obs, exp, p2s, p1s, m1s, m2s))    
-    ptsList_csc.sort()
-    for ipt, pt in enumerate(ptsList_csc):
-        xval = pt[0]
-        obs  = pt[1]
-        exp  = pt[2]
-        grobs_csc.SetPoint(ipt, xval, obs)
-        grexp_csc.SetPoint(ipt, xval, exp)
-    #DT fill
-    for k in range(0, len(ctaus) ):
-        fname = "datacards_%s/cards_%s_%s/VLLModel_DTB/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
-        if unblind==True: fname = "datacards_unblinded_%s/cards_%s_%s/VLLModel_DTU/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
-        vals  = getVals(fname)
-        xs    = xsecth
-        obs   = 0.0 ## FIXME
-        if unblind==True: obs = vals[5][1]*xs
-        m2s_t = vals[0][1]*xs
-        m1s_t = vals[1][1]*xs
-        exp   = vals[2][1]*xs
-        p1s_t = vals[3][1]*xs
-        p2s_t = vals[4][1]*xs
-        ## because the other code wants +/ sigma vars as deviations, without sign, from the centeal exp value...
-        p2s  = p2s_t - exp
-        p1s  = p1s_t - exp
-        m2s  = exp - m2s_t
-        m1s  = exp - m1s_t
-        xval = float(ctaus[k])/float(1000)
-        ptsList_dt.append((xval, obs, exp, p2s, p1s, m1s, m2s))    
-    ptsList_dt.sort()
-    for ipt, pt in enumerate(ptsList_dt):
-        xval = pt[0]
-        obs  = pt[1]
-        exp  = pt[2]
-        grexp_dt.SetPoint(ipt, xval, exp)
-        grobs_dt.SetPoint(ipt, xval, obs)
+	ptsList_csc = []
+	ptsList_dt  = []
+	#CSC fill
+	for j in range(0, len(ctaus) ):
+		fname = "datacards_%s/cards_%s_%s/VLLModel_CSCB/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[j],mvll,ctaus[j])
+		if unblind==True: fname = "datacards_unblinded_%s/cards_%s_%s/VLLModel_CSCU/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[j],mvll,ctaus[j])
+		vals  = getVals(fname)
+		xs    = xsecth
+		obs   = 0.0 ## FIXME
+		if unblind==True: obs = vals[5][1]*xs
+		m2s_t = vals[0][1]*xs
+		m1s_t = vals[1][1]*xs
+		exp   = vals[2][1]*xs
+		p1s_t = vals[3][1]*xs
+		p2s_t = vals[4][1]*xs
+		## because the other code wants +/ sigma vars as deviations, without sign, from the centeal exp value...
+		p2s  = p2s_t - exp
+		p1s  = p1s_t - exp
+		m2s  = exp - m2s_t
+		m1s  = exp - m1s_t
+		xval = float(ctaus[j])/float(1000)
+		ptsList_csc.append((xval, obs, exp, p2s, p1s, m1s, m2s))    
+	ptsList_csc.sort()
+	for ipt, pt in enumerate(ptsList_csc):
+		xval = pt[0]
+		obs  = pt[1]
+		exp  = pt[2]
+		grobs_csc.SetPoint(ipt, xval, obs)
+		grexp_csc.SetPoint(ipt, xval, exp)
+	#DT fill
+	for k in range(0, len(ctaus) ):
+		fname = "datacards_%s/cards_%s_%s/VLLModel_DTB/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
+		if unblind==True: fname = "datacards_unblinded_%s/cards_%s_%s/VLLModel_DTU/higgsCombine_%s_%s.AsymptoticLimits.mH120.root"%(version,mvll,ctaus[k],mvll,ctaus[k])
+		vals  = getVals(fname)
+		xs    = xsecth
+		obs   = 0.0 ## FIXME
+		if unblind==True: obs = vals[5][1]*xs
+		m2s_t = vals[0][1]*xs
+		m1s_t = vals[1][1]*xs
+		exp   = vals[2][1]*xs
+		p1s_t = vals[3][1]*xs
+		p2s_t = vals[4][1]*xs
+		## because the other code wants +/ sigma vars as deviations, without sign, from the centeal exp value...
+		p2s  = p2s_t - exp
+		p1s  = p1s_t - exp
+		m2s  = exp - m2s_t
+		m1s  = exp - m1s_t
+		xval = float(ctaus[k])/float(1000)
+		ptsList_dt.append((xval, obs, exp, p2s, p1s, m1s, m2s))    
+	ptsList_dt.sort()
+	for ipt, pt in enumerate(ptsList_dt):
+		xval = pt[0]
+		obs  = pt[1]
+		exp  = pt[2]
+		grexp_dt.SetPoint(ipt, xval, exp)
+		grobs_dt.SetPoint(ipt, xval, obs)
 
-    #set styles
-    grexp_csc.SetMarkerStyle(24)
-    grexp_csc.SetMarkerColor(4)
-    grexp_csc.SetMarkerSize(0.8)
-    grexp_csc.SetLineColor(ROOT.kRed+2)
-    grexp_csc.SetLineWidth(3)
-    grexp_csc.SetLineStyle(2)
-    grexp_csc.SetFillColor(0) 
-    grexp_dt.SetMarkerStyle(24)
-    grexp_dt.SetMarkerColor(4)
-    grexp_dt.SetMarkerSize(0.8)
-    grexp_dt.SetLineColor(ROOT.kGreen+2)
-    grexp_dt.SetLineWidth(3)
-    grexp_dt.SetLineStyle(2)
-    grexp_dt.SetFillColor(0) 
-    grobs_csc.SetLineColor(ROOT.kRed+2)
-    grobs_csc.SetLineWidth(3)
-    grobs_csc.SetMarkerColor(1)
-    grobs_csc.SetMarkerStyle(20)
-    grobs_csc.SetFillStyle(0)
-    grobs_dt.SetLineColor(ROOT.kGreen+2)
-    grobs_dt.SetLineWidth(3)
-    grobs_dt.SetMarkerColor(1)
-    grobs_dt.SetMarkerStyle(20)
-    grobs_dt.SetFillStyle(0)
+	#set styles
+	grexp_csc.SetMarkerStyle(24)
+	grexp_csc.SetMarkerColor(4)
+	grexp_csc.SetMarkerSize(0.8)
+	grexp_csc.SetLineColor(ROOT.kRed+2)
+	grexp_csc.SetLineWidth(3)
+	grexp_csc.SetLineStyle(2)
+	grexp_csc.SetFillColor(0) 
+	grexp_dt.SetMarkerStyle(24)
+	grexp_dt.SetMarkerColor(4)
+	grexp_dt.SetMarkerSize(0.8)
+	grexp_dt.SetLineColor(ROOT.kGreen+2)
+	grexp_dt.SetLineWidth(3)
+	grexp_dt.SetLineStyle(2)
+	grexp_dt.SetFillColor(0) 
+	grobs_csc.SetLineColor(ROOT.kRed+2)
+	grobs_csc.SetLineWidth(3)
+	grobs_csc.SetMarkerColor(1)
+	grobs_csc.SetMarkerStyle(20)
+	grobs_csc.SetFillStyle(0)
+	grobs_dt.SetLineColor(ROOT.kGreen+2)
+	grobs_dt.SetLineWidth(3)
+	grobs_dt.SetMarkerColor(1)
+	grobs_dt.SetMarkerStyle(20)
+	grobs_dt.SetFillStyle(0)
 
 
 ######## set styles
@@ -383,9 +384,9 @@ if categ==True:
   grexp_csc.Draw("L same")
   grexp_dt.Draw("L same")
   if unblind==True:
-    grobs.Draw("L same")
-    grobs_csc.Draw("L same")
-    grobs_dt.Draw("L same")   
+	grobs.Draw("L same")
+	grobs_csc.Draw("L same")
+	grobs_dt.Draw("L same")   
   th.Draw( 'l same' )
   pt.Draw()
   pt2.Draw()
