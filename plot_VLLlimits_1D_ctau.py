@@ -117,7 +117,7 @@ n  = 2
 x  = array('d', [0.01,10])
 y  = array('d', [xsecth,xsecth])
 
-if mllp=='2': x  = array('d', [0.001,2])
+if mllp=='2': x  = array('d', [0.002,10])
 
 ##print coupling_xs
 ptsList = [] 
