@@ -358,7 +358,7 @@ xrg=0.01
 yrg=10
 if mllp=='2':
     xrg=0.002
-    yrg=1
+    yrg=10
 
 hframe = ROOT.TH1F('hframe', '', 10000, xrg, yrg)
 hframe.SetMinimum(0.00001)
