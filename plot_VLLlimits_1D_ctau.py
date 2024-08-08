@@ -2,7 +2,7 @@ import re, optparse
 import os.path,sys
 import argparse
 from math import *
-# from ROOT import *
+from ROOT import *
 import ROOT
 from array import array
 ROOT.gROOT.SetBatch(True)
@@ -29,10 +29,10 @@ def redrawBorder(mass):
       l.DrawLine(0.01, 0.00001, 0.01, 10);
       l.DrawLine(10, 0.00001, 10, 10);
    else:
-      l.DrawLine(0.002, 0.00001, 1, 0.00001);
-      l.DrawLine(0.002, 10, 1, 10);
+      l.DrawLine(0.002, 0.00001, 10, 0.00001);
+      l.DrawLine(0.002, 10, 10, 10);
       l.DrawLine(0.002, 0.00001, 0.002, 10);
-      l.DrawLine(1, 0.00001, 1, 10);   	
+      l.DrawLine(10, 0.00001, 10, 10);   	
 
 
    #l.DrawLine(ROOT.gPad.GetUxmax(), 0.00001, ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymax());
@@ -59,6 +59,7 @@ parser = argparse.ArgumentParser(description='Command line parser of skim option
 parser.add_argument('--version', dest='version',help='version', required = True)
 parser.add_argument('--mvll', dest='mvll',help='mvll value', required = True)
 parser.add_argument('--mllp', dest='mllp',help='mllp value', required = True)
+parser.add_argument('--order', dest='order',help='LO or NLO cross section', required = True)
 parser.add_argument('--categ',    dest='categ', action='store_true', help='Do signal')
 parser.add_argument('--unblind', dest='unblind',action='store_true', help='Unblind the observed')
 parser.set_defaults(categ=False)
@@ -70,6 +71,7 @@ args = parser.parse_args()
 mvll   = args.mvll
 mllp   = args.mllp
 categ  = args.categ
+order  = args.order
 version= args.version
 unblind= args.unblind
 
@@ -94,12 +96,15 @@ grobs_dt  = ROOT.TGraph()
 
 ctaus     = []
 xsecth    = 0
-xsections = [0.08865, 0.01927, 0.005932, 0.002232, 0.0009479, 0.0004374,0.0002139,0.000122,0.00006]
-masses    = [    200,    300,       400,      500,       600,       700,      800,     900,   1000]  
+xsections = []
+masses    = [    200,    300,       400,      500,       600,       700,      800,     900,   1000]
+if order =='LO':
+  xsections = [0.08865, 0.01927, 0.005932, 0.002232, 0.0009479, 0.0004374,0.0002139,0.000122,0.00006]
+if order == 'NLO':
+  xsections = [1.050e-01, 2.288e-02, 7.154e-03, 2.700e-03, 1.163e-03, 5.446e-04,2.711e-04,1.410e-04,7.604e-05]
 
 if mllp=='2':
-#	ctaus     = [2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,90,95,100,150,200,250,300,800,1000,2000,3000,8000,10000]
-	ctaus     = [2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,90,95,100,150,200,250,300,800,1000]
+	ctaus     = [2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,150,200,250,300,800,1000,2000,3000,8000,10000]
 if mllp=='10':
     ctaus      = [10, 20, 30, 80, 100, 200, 300, 800, 1000, 2000, 3000, 8000, 10000]
 
@@ -281,7 +286,8 @@ if categ==True:
    fakePlot3.SetFillStyle(3001)
    fakePlot3.SetLineColor(6)
    fakePlot3.SetLineWidth(3)
-   legend.AddEntry(fakePlot3, "Theoretical prediction", "l")
+   if order == 'NLO': legend.AddEntry(fakePlot3, "NLO Theoretical prediction", "l")
+   else: legend.AddEntry(fakePlot3, "Theoretical prediction", "l")
 else:
    legend.SetX1(0.17284)
    legend.SetY1(0.630526+0.05)
@@ -297,7 +303,8 @@ else:
    fakePlot3.SetFillStyle(3001)
    fakePlot3.SetLineColor(6)
    fakePlot3.SetLineWidth(3)
-   legend.AddEntry(fakePlot3, "Theoretical prediction", "l")
+   if order == 'NLO': legend.AddEntry(fakePlot3, "NLO Theoretical prediction", "l")
+   else: legend.AddEntry(fakePlot3, "Theoretical prediction", "l")
 
 ##### text
 pt = ROOT.TPaveText(0.1663218-0.02,0.886316,0.3045977-0.02,0.978947,"brNDC")
